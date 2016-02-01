@@ -1,0 +1,15 @@
+{
+  "name": "giftp",
+  "version": "0.0.0",
+  "description": "Upload GIT changes to FTP",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "GIT",
+    "FTP"
+  ],
+  "author": "jazz-soft (http://jazz-soft.net/)",
+  "private": true
+}
