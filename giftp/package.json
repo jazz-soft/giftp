@@ -11,5 +11,12 @@
     "FTP"
   ],
   "author": "jazz-soft (http://jazz-soft.net/)",
+  "dependencies": {
+    "ftp": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jazz-soft/giftp.git"
+  },
   "private": true
 }
