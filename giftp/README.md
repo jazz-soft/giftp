@@ -15,12 +15,12 @@ It can also be used for any other task that requires sending GIT diff via FTP.
 
     node giftp [<config-file>] [<config-name>]
 
-#### <config-file>
-- a JSON file with the connection parameters.
+#### config-file
+ - a JSON file with the connection parameters.
 If not specified, giftp is looking for a file named giftp.json in the current directory.
 
-#### <config-mame>
-- a config name (if there are multiple configs in the file).
+#### config-mame
+ - a config name (if there are multiple configs in the file).
 
     // giftp.json
     {
