@@ -12,16 +12,14 @@ It can also be used for any other task that requires sending GIT diff via FTP.
 
 ### Usage
 
-`node giftp [<*config-file*>] [<*config-name*>]`
+`node giftp [<config-file>] [<config-name>]`
 
-<*config-file*>
- - a JSON file with the connection parameters.
+<*config-file*> - a JSON file with the connection parameters.
 If not specified, giftp is looking for a file named giftp.json in the current directory.
 
-#### config-mame
- - a config name (if there are multiple configs in the file).
+<*config-name*> - a config name (if there are multiple configs in the file).
 
-```
+```javascript
 // giftp.json
 {
   "local": "C:/myrepo/html",
@@ -32,17 +30,18 @@ If not specified, giftp is looking for a file named giftp.json in the current di
 }
 ```
 
-    // another.json
-    {
-      "config1": {
-        "local": "~/work/myrepo/html",
-        "remote": "/myserver/public_html",
-        "ftp": "mydomain.com"
-      },
-      "config2": {
-        "local": "~/work/myrepo/img",
-        "remote": "/myserver/public_html/img",
-        "ftp": "mydomain.com"
-      }
-    }
+```javascript
+// another.json
+{
+  "config1": {
+    "local": "~/work/myrepo/html",
+    "remote": "/myserver/public_html",
+    "ftp": "mydomain.com"
+  },
+  "config2": {
+    "local": "~/work/myrepo/img",
+    "remote": "/myserver/public_html/img",
+    "ftp": "mydomain.com"
+  }
+}
 
