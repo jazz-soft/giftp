@@ -59,24 +59,37 @@ function updateFiles(conn) {
     done(conn);
     return;
   }
-  var mkDir = {};
-  var rmDir = {};
-  pushSubpaths(diff.A, mkDir);
-  pushSubpaths(diff.M, mkDir);
-  pushSubpaths(diff.D, rmDir);
-  var dd = [''];
-  for (var d in mkDir) dd.push(d);
-  dd = dd.sort();
-  var mkdir = [];
-  for (var i=0; i<dd.length; i++) if (dd[i] && (i == dd.length-1 || dd[i+1].substr(0, dd[i].length) != dd[i])) mkdir.push(dd[i]);
   var send = [];
   if (diff.A) send = send.concat(diff.A);
   if (diff.M) send = send.concat(diff.M);
   var remove = [];
   if (diff.D) remove = remove.concat(diff.D);
+  var dd = [''];
+  for (var i in send) {
+    var a = send[i].split('/');
+    if (a.length < 2) continue;
+    a[a.length - 1] = '';
+    dd.push(a.join('/'));
+  }
+  dd = dd.sort();
+  var mkdir = [];
+  for (var i=0; i<dd.length; i++) if (dd[i] && (i == dd.length-1 || dd[i+1].substr(0, dd[i].length) != dd[i])) mkdir.push(dd[i]);
+  dd = [];
+  for (var i in remove) {
+    var a = remove[i].split('/');
+    if (a.length < 2) continue;
+    a[a.length - 1] = '';
+    dd.push(a.join('/'));
+  }
+  dd = dd.sort();
+  var rmdir = [];
+  for (var i=0; i<dd.length; i++) if (dd[i] && (i == dd.length-1 || dd[i+1].substr(0, dd[i].length) != dd[i])) rmdir.push(dd[i]);
+
   ftp.remove(conn, conf.remote, remove, function(){
-    ftp.mkdir(conn, conf.remote, mkdir, function(){
-      ftp.send(conn, conf.remote, conf.local, send, updateRevision);
+    ftp.rmdir(conn, conf.remote, rmdir, function(){
+      ftp.mkdir(conn, conf.remote, mkdir, function(){
+        ftp.send(conn, conf.remote, conf.local, send, updateRevision);
+      });
     });
   });
 }
@@ -89,22 +102,4 @@ function updateRevision(conn) {
 function done(conn) {
   conn.end();
   console.log('\nDone!');
-}
-
-
-function dir(path) {
-  var a = path.split('/');
-  if (a.length) a[a.length-1] = '';
-  return a.join('/');
-}
-
-function pushSubpaths(a, h) {
-  for (var i in a) {
-    var p = a[i].split('/');
-    if (p.length < 2) continue;
-    for (var n = p.length - 1; n > 0; n--) {
-      p.length = n; p.push('');
-      h[p.join('/')] = true;
-    }
-  }
 }

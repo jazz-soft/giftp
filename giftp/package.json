@@ -1,14 +1,17 @@
 {
   "name": "giftp",
   "version": "0.0.0",
-  "description": "Upload GIT changes to FTP",
+  "description": "Synchronize GIT changes via FTP",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
+    "git",
     "GIT",
-    "FTP"
+    "ftp",
+    "FTP",
+    "deploy"
   ],
   "author": "jazz-soft (http://jazz-soft.net/)",
   "dependencies": {
