@@ -6,7 +6,7 @@ Synchronize GIT changes via FTP
 
 Are you planning to keep your website in GIT repository
 and upload it to the public hosting by FTP?  
-Then you may consider this little tool!
+Then you may consider this little tool...
 
 It can also be used for any other task that requires sending GIT *diff* via FTP.
 
@@ -56,3 +56,8 @@ This will allow uploads from several working copies.
 To manually tweak the *"from"* revision, you can delete the remote `.giftp` file
 and modify the local one.
 
+
+### Links
+
+- at GitHub: [https://github.com/jazz-soft/giftp]
+- at npm: [https://www.npmjs.com/package/giftp]
