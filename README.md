@@ -59,5 +59,5 @@ and modify the local one.
 
 ### Links
 
-- at GitHub: [https://github.com/jazz-soft/giftp]
-- at npm: [https://www.npmjs.com/package/giftp]
+giftp at GitHub: [https://github.com/jazz-soft/giftp]
+giftp at npm: [https://www.npmjs.com/package/giftp]

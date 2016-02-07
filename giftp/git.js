@@ -22,14 +22,15 @@ function version() {
 
 function changes(path, rev) {
   var wt = root(path);
+  var n = path.length - wt.length;
   if (rev === undefined) rev = 'HEAD';
   var out = ('' + cp.execSync('git --git-dir=' + wt + '/.git --work-tree=' + wt + ' diff --name-status ' + rev + ' -- ' + path)).split('\n');
   var ret = {};
   for (var i in out) {
     var x = out[i].split('\t');
     if (x[0]) {
-      if (ret[x[0]]) ret[x[0]].push(x[1]);
-      else ret[x[0]] = [x[1]];
+      if (ret[x[0]]) ret[x[0]].push(x[1].substr(n));
+      else ret[x[0]] = [x[1].substr(n)];
     }
   }
   return ret;

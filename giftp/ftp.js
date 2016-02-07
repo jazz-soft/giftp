@@ -35,6 +35,7 @@ function send(ftp, remote, local, arr, func) {
   function callback(err) {
     if (err) {
       console.log(err);
+      throw err;
     }
     process.stdout.write('.');
     count--;
