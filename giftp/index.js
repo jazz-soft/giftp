@@ -44,7 +44,7 @@ function getLastSha(conn) {
 
 function updateFiles(conn) {
   try {
-    oldRev = '' + fs.readFileSync(localRev);
+    oldRev = ('' + fs.readFileSync(localRev)).trim();
   }
   catch (e) {}
   console.log('old rev:', oldRev);

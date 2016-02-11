@@ -11,6 +11,10 @@ function connect(arg, func) {
   if (arg.password) conn.password = arg.password;
   var ftp = new Ftp();
   ftp.on('ready', function(){func(ftp);});
+  ftp.on('error', function(err){
+    if (err.code != 530) throw err;
+    connectWithLogin(conn, func);
+  });
   ftp.connect(conn);
 }
 
@@ -101,6 +105,61 @@ function rmdirUp(ftp, remote, dir, func) {
     else func();
   }
   callback();
+}
+
+function connectWithLogin(conn, func) {
+  if (conn.user) {
+    connectWithPassword(conn, func);
+  }
+  else {
+    process.stdout.write('FTP login: ');
+    var stdin = process.stdin;
+    stdin.resume();
+    stdin.setEncoding('utf8');
+    stdin.once('data', function(str){
+      stdin.pause();
+      conn.user = (''+str).trim();
+      connectWithPassword(conn, func);
+    });
+  }
+}
+
+function connectWithPassword(conn, func) {
+  var prompt = 'Password for ' + conn.user + ': ';
+  process.stdout.write(prompt);
+
+  var stdin = process.stdin;
+  stdin.setRawMode(true);
+  stdin.resume();
+  stdin.setEncoding('utf8');
+
+  var password = '';
+  stdin.on('data', function(ch){
+    ch = ch.toString('utf8');
+    if (ch == '\n' || ch == '\r' || ch == '\u0004') {
+      process.stdout.write('\n\n');
+      stdin.setRawMode(false);
+      stdin.pause();
+      conn.password = password;
+      var ftp = new Ftp();
+      ftp.on('ready', function(){func(ftp);});
+      ftp.connect(conn);
+    }
+    else if (ch == '\u0003') { // Ctrl-C
+      stdin.pause();
+    }
+    else if (ch.charCodeAt(0) == 8) { // Backspace
+      password = password.slice(0, password.length - 1);
+      process.stdout.clearLine();
+      process.stdout.cursorTo(0);
+      process.stdout.write(prompt);
+      process.stdout.write(password.split('').map(function(){ return '*';}).join(''));
+    }
+    else {
+      process.stdout.write('*');
+      password += ch;
+    }
+  });
 }
 
 module.exports = {
