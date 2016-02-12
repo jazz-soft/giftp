@@ -56,6 +56,12 @@ This will allow uploads from several working copies.
 To manually tweak the *"from"* revision, you can delete the remote `.giftp` file
 and modify the local one.
 
+### Calling from your own code
+
+```javascript
+var giftp = require('giftp');
+giftp.run({ local: "/local/path", remote: "/remote/path", ftp: "myserver.com" });
+```
 
 ### Links
 
