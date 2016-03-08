@@ -9,13 +9,19 @@ function run(conf) {
   var contents;
   var config;
   if (conf === undefined) {
+    var args = [];
+    var flags = {};
+    for (var n = 2; n < process.argv.length; n++) {
+      if (process.argv[n] == '--no-delete') flags.no_delete = true;
+      else args.push(process.argv[n]);
+    }
     try {
-      contents = fs.readFileSync(process.argv[2]);
-      config = process.argv[3];
+      contents = fs.readFileSync(args[0]);
+      config = args[1];
     }
     catch (e) {
       contents = fs.readFileSync('giftp.json');
-      config = process.argv[2];
+      config = args[0];
     }
     conf = JSON.parse(contents);
     if (config !== undefined) {
@@ -25,6 +31,8 @@ function run(conf) {
       }
     }
   }
+  for (var n in flags) conf[n] = flags[n];
+
   if (conf.local === undefined) throw 'Local path undefined';
   conf.local = fs.realpathSync(conf.local);
   if (conf.remote === undefined) throw 'Remote path undefined';
@@ -66,7 +74,7 @@ function run(conf) {
     if (diff.A) send = send.concat(diff.A);
     if (diff.M) send = send.concat(diff.M);
     var remove = [];
-    if (diff.D) remove = remove.concat(diff.D);
+    if (diff.D && !conf.no_delete) remove = remove.concat(diff.D);
     var dd = [''];
     for (var i in send) {
       var a = send[i].split('/');

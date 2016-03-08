@@ -12,7 +12,7 @@ It can also be used for any other task that requires sending GIT *diff* via FTP.
 
 ### Usage
 
-`node giftp [<config-file>] [<config-name>]`
+`node giftp [<config-file>] [<config-name>] [--no-delete]`
 
 `<config-file>` - a JSON file with the connection parameters.
 If not specified, *giftp* looks for a file named `giftp.json` in the current directory.
@@ -48,6 +48,10 @@ If not specified, *giftp* looks for a file named `giftp.json` in the current dir
 
 `local` directory must reside inside the GIT working copy,
 but don't have to be its root directory.
+
+`--no-delete` - don't delete remote files.
+This option is useful if you remove file from version control, but want to keep it on server.
+This flag can be also passed with the config object as `"no_delete": true` .
 
 After synchronizing, *giftp* will place the `.giftp` file with the latest revision ID
 in both the `local` and the `remote` directories to use it as the *"from"* revision next time.  
