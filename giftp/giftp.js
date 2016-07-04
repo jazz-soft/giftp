@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 if (require.main === module) run();
 else module.exports.run = run;
 

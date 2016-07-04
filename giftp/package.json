@@ -1,10 +1,10 @@
 {
   "name": "giftp",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Synchronize GIT changes via FTP",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "main": "giftp.js",
+  "bin": {
+    "giftp": "giftp.js"
   },
   "keywords": [
     "git",

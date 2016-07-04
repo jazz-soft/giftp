@@ -10,9 +10,13 @@ Then you may consider this little tool...
 
 It can also be used for any other task that requires sending GIT *diff* via FTP.
 
+### Install
+
+`npm install -g giftp`
+
 ### Usage
 
-`node giftp [<config-file>] [<config-name>] [--no-delete]`
+`giftp [<config-file>] [<config-name>] [--no-delete]`
 
 `<config-file>` - a JSON file with the connection parameters.
 If not specified, *giftp* looks for a file named `giftp.json` in the current directory.
