@@ -1,6 +1,6 @@
 {
   "name": "giftp",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Synchronize GIT changes via FTP",
   "main": "giftp.js",
   "bin": {
