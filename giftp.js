@@ -4,9 +4,11 @@ if (require.main === module) run();
 else module.exports.run = run;
 
 function run(conf) {
+  var pkg = require('./package.json');
   var fs = require('fs');
-  var git = require('./git.js');
-  var ftp = require('./ftp.js');
+  var git = require('./git-calls.js');
+  var ftp = require('./ftp-calls.js');
+  console.log(pkg.name, 'version', pkg.version);
   console.log(git.version());
   var contents;
   var config;
@@ -22,8 +24,14 @@ function run(conf) {
       config = args[1];
     }
     catch (e) {
-      contents = fs.readFileSync('giftp.json');
-      config = args[0];
+      try {
+        contents = fs.readFileSync('giftp.json');
+        config = args[0];
+      }
+      catch (e) {
+        console.log(e.message);
+        return;
+      }
     }
     conf = JSON.parse(contents);
     if (config !== undefined) {
@@ -49,6 +57,7 @@ function run(conf) {
   var oldRev = git.null;
   var newRev = git.head(conf.local);
 
+return;
   ftp.connect(conf, getLastSha);
 
   function getLastSha(conn) {

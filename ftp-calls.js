@@ -1,4 +1,4 @@
-var Ftp = require('ftp');
+var ssh = require('ssh2');
 var fs = require('fs');
 
 function connect(arg, func) {
