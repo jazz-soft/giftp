@@ -24,14 +24,8 @@ function run(conf) {
       config = args[1];
     }
     catch (e) {
-      try {
-        contents = fs.readFileSync('giftp.json');
-        config = args[0];
-      }
-      catch (e) {
-        console.log(e.message);
-        return;
-      }
+      contents = fs.readFileSync('giftp.json');
+      config = args[0];
     }
     conf = JSON.parse(contents);
     if (config !== undefined) {
@@ -45,8 +39,8 @@ function run(conf) {
 
   if (conf.local === undefined) throw 'Local path undefined';
   conf.local = fs.realpathSync(conf.local);
+  if (conf.sftp === undefined) throw 'sftp address undefined';
   if (conf.remote === undefined) throw 'Remote path undefined';
-  if (conf.ftp === undefined && conf.sftp === undefined) throw 'Neither ftp nor sftp is defined';
   if (!fs.lstatSync(conf.local).isDirectory() || git.root(conf.local) === undefined) throw conf.local + ' is not a valid GIT directory';
 
   var diff = git.changes(conf.local);
@@ -57,7 +51,6 @@ function run(conf) {
   var oldRev = git.null;
   var newRev = git.head(conf.local);
 
-return;
   ftp.connect(conf, getLastSha);
 
   function getLastSha(conn) {
@@ -122,7 +115,7 @@ return;
   }
 
   function done(conn) {
-    conn.end();
+    ftp.stop(conn);
     console.log('\nDone!');
   }
 }

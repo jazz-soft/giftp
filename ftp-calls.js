@@ -1,39 +1,39 @@
-var ssh = require('ssh2');
 var fs = require('fs');
+var SSH2 = require('ssh2');
 
 function connect(arg, func) {
-  if (arg.sftp) throw "sftp is not yet implemented";
-  var addr = arg.ftp.split(':');
+  var addr = arg.sftp.split(':');
   var host = addr[0];
   var port = addr[1];
-  var conn = {host:host};
-  if (arg.login) conn.user = arg.login;
+  var conn = { host: host, readyTimeout: 5000 };
+  if (port) conn.port = port;
+  if (arg.login) conn.username = arg.login;
   if (arg.password) conn.password = arg.password;
-  var ftp = new Ftp();
-  ftp.on('ready', function(){func(ftp);});
-  ftp.on('error', function(err){
-    if (err.code != 530) throw err;
-    connectWithLogin(conn, func);
+  var ssh2 = new SSH2();
+  ssh2.on('error', function(err) { throw err; });
+  ssh2.on('ready', function(){
+    console.log('connected to', arg.sftp);
+    ssh2.sftp(function(err, sftp) {
+      if (err) throw err;
+      func([sftp, ssh2]);
+    });
   });
-  ftp.connect(conn);
+  ssh2.connect(conn);
 }
 
-function getIfPossible(ftp, remote, local, func) {
-  ftp.get(remote, function(err, stream){
-    if (err) {
-      //console.log(err);
-      func(ftp);
-      return;
-    }
-    stream.once('close', function(){func(ftp);});
-    stream.pipe(fs.createWriteStream(local));
+function getIfPossible(conn, remote, local, func) {
+  conn[0].fastGet(remote, local, {}, function(err) {
+    if (err) console.log(err.message);
+    if (func) func(conn);
+    else conn[1].end();
   });
 }
 
-function send(ftp, remote, local, arr, func) {
+function send(conn, remote, local, arr, func) {
   var count = arr.length;
   if (!count) {
-    func(ftp);
+    if (func) func(conn);
+    else conn[1].end();
     return;
   }
   function callback(err) {
@@ -43,15 +43,21 @@ function send(ftp, remote, local, arr, func) {
     }
     process.stdout.write('.');
     count--;
-    if (!count) func(ftp);
+    if (!count) {
+      if (func) func(conn);
+      else conn[1].end();
+    }
   }
-  for (var i in arr) ftp.put(local+'/'+arr[i], remote+'/'+arr[i], callback);
+  for (var i in arr) {
+    conn[0].fastPut(local+'/'+arr[i], remote+'/'+arr[i], {}, callback);
+  }
 }
 
-function remove(ftp, remote, arr, func) {
+function remove(conn, remote, arr, func) {
   var count = arr.length;
   if (!count) {
-    func(ftp);
+    if (func) func(conn);
+    else conn[1].end();
     return;
   }
   function callback(err) {
@@ -60,15 +66,19 @@ function remove(ftp, remote, arr, func) {
     }
     process.stdout.write('.');
     count--;
-    if (!count) func(ftp);
+    if (!count) {
+      if (func) func(conn);
+      else conn[1].end();
+    }
   }
-  for (var i in arr) ftp.delete(remote+'/'+arr[i], callback);
+  for (var i in arr) conn[0].unlink(remote+'/'+arr[i], callback);
 }
 
-function mkdir(ftp, remote, arr, func) {
+function mkdir(conn, remote, arr, func) {
   var count = arr.length;
   if (!count) {
-    func(ftp);
+    if (func) func(conn);
+    else conn[1].end();
     return;
   }
   function callback(err) {
@@ -77,37 +87,48 @@ function mkdir(ftp, remote, arr, func) {
     }
     process.stdout.write('.');
     count--;
-    if (!count) func(ftp);
+    if (!count) {
+      if (func) func(conn);
+      else conn[1].end();
+    }
   }
-  for (var i in arr) ftp.mkdir(remote+'/'+arr[i], true, callback);
+  for (var i in arr) {
+    conn[0].mkdir(remote+'/'+arr[i], callback);
+  }
 }
 
-function rmdir(ftp, remote, arr, func) {
+function rmdir(conn, remote, arr, func) {
   var count = arr.length;
   if (!count) {
-    func(ftp);
+    if (func) func(conn);
+    else conn[1].end();
     return;
   }
   function callback(err) {
     process.stdout.write('.');
     count--;
-    if (!count) func(ftp);
+    if (!count) {
+      if (func) func(conn);
+      else conn[1].end();
+    }
   }
-  for (var i in arr) rmdirUp(ftp, remote, arr[i], callback);
+  for (var i in arr) {
+    rmdirUp(conn, remote, arr[i], callback);
+  }
 }
 
-function rmdirUp(ftp, remote, dir, func) {
+function rmdirUp(conn, remote, dir, func) {
   var path = dir.split('/');
   if (!path.length || path[path.length-1] != '') path.push('');
   function callback(err) {
     path.length = path.length - 1;
-    if (path.length) ftp.rmdir(remote+'/'+path.join('/'), callback);
+    if (path.length) conn[0].rmdir(remote+'/'+path.join('/'), callback);
     else func();
   }
   callback();
 }
 
-function connectWithLogin(conn, func) {
+function connectWithLogin(conn, func) { // this function is broken!
   if (conn.user) {
     connectWithPassword(conn, func);
   }
@@ -124,7 +145,7 @@ function connectWithLogin(conn, func) {
   }
 }
 
-function connectWithPassword(conn, func) {
+function connectWithPassword(conn, func) { // this function is broken!
   var prompt = 'Password for ' + conn.user + ': ';
   process.stdout.write(prompt);
 
@@ -162,11 +183,14 @@ function connectWithPassword(conn, func) {
   });
 }
 
+function stop(conn) { conn[1].end(); }
+
 module.exports = {
   connect: connect,
   send: send,
   remove: remove,
   mkdir: mkdir,
   rmdir: rmdir,
-  getIfPossible: getIfPossible
+  getIfPossible: getIfPossible,
+  stop: stop
 };
