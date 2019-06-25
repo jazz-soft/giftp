@@ -1,4 +1,3 @@
-var fs = require('fs');
 var SSH2 = require('ssh2');
 
 function connect(arg, func) {
@@ -104,7 +103,7 @@ function rmdir(conn, remote, arr, func) {
     else conn[1].end();
     return;
   }
-  function callback(err) {
+  function callback() {
     process.stdout.write('.');
     count--;
     if (!count) {
@@ -120,7 +119,7 @@ function rmdir(conn, remote, arr, func) {
 function rmdirUp(conn, remote, dir, func) {
   var path = dir.split('/');
   if (!path.length || path[path.length-1] != '') path.push('');
-  function callback(err) {
+  function callback() {
     path.length = path.length - 1;
     if (path.length) conn[0].rmdir(remote+'/'+path.join('/'), callback);
     else func();
@@ -128,6 +127,7 @@ function rmdirUp(conn, remote, dir, func) {
   callback();
 }
 
+/*
 function connectWithLogin(conn, func) { // this function is broken!
   if (conn.user) {
     connectWithPassword(conn, func);
@@ -181,8 +181,7 @@ function connectWithPassword(conn, func) { // this function is broken!
       password += ch;
     }
   });
-}
-
+*/
 function stop(conn) { conn[1].end(); }
 
 module.exports = {

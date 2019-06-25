@@ -1,10 +1,13 @@
 {
   "name": "giftp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Synchronize GIT changes via FTP",
   "main": "giftp.js",
   "bin": {
     "giftp": "giftp.js"
+  },
+  "scripts": {
+    "lint": "eslint ."
   },
   "keywords": [
     "git",
@@ -20,5 +23,8 @@
     "url": "https://github.com/jazz-soft/giftp.git"
   },
   "homepage": "http://jazz-soft.net",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^6.0.0"
+  }
 }

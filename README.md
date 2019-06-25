@@ -1,5 +1,8 @@
 # giftp
 
+[![npm](https://img.shields.io/npm/v/giftp.svg)](https://www.npmjs.com/package/giftp)
+[![npm](https://img.shields.io/npm/dt/giftp.svg)](https://www.npmjs.com/package/giftp)
+
 Synchronize GIT changes via FTP
 
 ## *giftp* stands for GIT and FTP
@@ -28,7 +31,7 @@ If not specified, *giftp* looks for a file named `giftp.json` in the current dir
 {
   "local": "C:/myrepo/html",
   "remote": "/myserver/public_html",
-  "ftp": "mydomain.com",
+  "sftp": "mydomain.com",
   "login": "mylogin",
   "password": "mypassword"
 }
@@ -40,12 +43,12 @@ If not specified, *giftp* looks for a file named `giftp.json` in the current dir
   "config1": {
     "local": "~/work/myrepo/html",
     "remote": "/myserver/public_html",
-    "ftp": "mydomain.com"
+    "sftp": "mydomain.com"
   },
   "config2": {
     "local": "~/work/myrepo/img",
     "remote": "/myserver/public_html/img",
-    "ftp": "mydomain.com:21"
+    "sftp": "mydomain.com:22"
   }
 }
 ```
@@ -68,10 +71,9 @@ and modify the local one.
 
 ```javascript
 var giftp = require('giftp');
-giftp.run({ local: "/local/path", remote: "/remote/path", ftp: "myserver.com" });
+giftp.run({
+  local: "/local/path",
+  remote: "/remote/path",
+  sftp: "myserver.com:22"
+});
 ```
-
-### Links
-
-- giftp at GitHub: [https://github.com/jazz-soft/giftp](https://github.com/jazz-soft/giftp)
-- giftp at npm: [https://www.npmjs.com/package/giftp](https://www.npmjs.com/package/giftp)

@@ -12,10 +12,11 @@ function run(conf) {
   console.log(git.version());
   var contents;
   var config;
+  var n;
   if (conf === undefined) {
     var args = [];
     var flags = {};
-    for (var n = 2; n < process.argv.length; n++) {
+    for (n = 2; n < process.argv.length; n++) {
       if (process.argv[n] == '--no-delete') flags.no_delete = true;
       else args.push(process.argv[n]);
     }
@@ -35,7 +36,7 @@ function run(conf) {
       }
     }
   }
-  for (var n in flags) conf[n] = flags[n];
+  for (n in flags) conf[n] = flags[n];
 
   if (conf.local === undefined) throw 'Local path undefined';
   conf.local = fs.realpathSync(conf.local);
@@ -66,9 +67,10 @@ function run(conf) {
     console.log('new rev:', newRev);
     console.log('');
     var diff = git.changes(conf.local, oldRev);
-    for (var k in diff.A) console.log('A\t' + diff.A[k]);
-    for (var k in diff.M) console.log('M\t' + diff.M[k]);
-    for (var k in diff.D) console.log('D\t' + diff.D[k]);
+    var a, i, k;
+    for (k in diff.A) console.log('A\t' + diff.A[k]);
+    for (k in diff.M) console.log('M\t' + diff.M[k]);
+    for (k in diff.D) console.log('D\t' + diff.D[k]);
     if (!diff.A && !diff.D && !diff.M) {
       console.log('No changes!');
       done(conn);
@@ -80,25 +82,25 @@ function run(conf) {
     var remove = [];
     if (diff.D && !conf.no_delete) remove = remove.concat(diff.D);
     var dd = [''];
-    for (var i in send) {
-      var a = send[i].split('/');
+    for (i in send) {
+      a = send[i].split('/');
       if (a.length < 2) continue;
       a[a.length - 1] = '';
       dd.push(a.join('/'));
     }
     dd = dd.sort();
     var mkdir = [];
-    for (var i=0; i<dd.length; i++) if (dd[i] && (i == dd.length-1 || dd[i+1].substr(0, dd[i].length) != dd[i])) mkdir.push(dd[i]);
+    for (i = 0; i < dd.length; i++) if (dd[i] && (i == dd.length-1 || dd[i+1].substr(0, dd[i].length) != dd[i])) mkdir.push(dd[i]);
     dd = [];
-    for (var i in remove) {
-      var a = remove[i].split('/');
+    for (i in remove) {
+      a = remove[i].split('/');
       if (a.length < 2) continue;
       a[a.length - 1] = '';
       dd.push(a.join('/'));
     }
     dd = dd.sort();
     var rmdir = [];
-    for (var i=0; i<dd.length; i++) if (dd[i] && (i == dd.length-1 || dd[i+1].substr(0, dd[i].length) != dd[i])) rmdir.push(dd[i]);
+    for (i = 0; i < dd.length; i++) if (dd[i] && (i == dd.length-1 || dd[i+1].substr(0, dd[i].length) != dd[i])) rmdir.push(dd[i]);
 
     ftp.remove(conn, conf.remote, remove, function(){
       ftp.rmdir(conn, conf.remote, rmdir, function(){
