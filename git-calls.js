@@ -42,7 +42,7 @@ function head(path) {
 }
 
 module.exports = {
-  null: '4b825dc642cb6eb9a060e54bf8d69288fbee4904',
+  null: '0000000000000000000000000000000000000000',
   root: root,
   head: head,
   version: version,

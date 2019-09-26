@@ -61,7 +61,7 @@ function remove(conn, remote, arr, func) {
   }
   function callback(err) {
     if (err) {
-      console.log(err);
+      //console.log('unlink:', err);
     }
     process.stdout.write('.');
     count--;
@@ -82,7 +82,7 @@ function mkdir(conn, remote, arr, func) {
   }
   function callback(err) {
     if (err) {
-      console.log(err);
+      //console.log('mkdir:', err);
     }
     process.stdout.write('.');
     count--;
