@@ -1,6 +1,6 @@
 {
   "name": "giftp",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Synchronize GIT changes via FTP",
   "main": "giftp.js",
   "bin": {
@@ -16,7 +16,7 @@
   ],
   "author": "jazz-soft (http://jazz-soft.net/)",
   "dependencies": {
-    "ssh2": "^0.8.5"
+    "ssh2": "^1.4.0"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,6 @@
   "homepage": "http://jazz-soft.net",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^6.4.0"
+    "eslint": "^7.32.0"
   }
 }
